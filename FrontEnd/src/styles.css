@@ -1,0 +1,72 @@
+/* Global styles */
+@import "tailwindcss";
+
+:root {
+  /* Base */
+  --background: #F1F5F8;        /* blanco puro */
+  --foreground: #414f70;        /* casi negro (slate-900) */
+
+  /* Surfaces */
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+
+  /* Brand */
+  --primary: #0f172a;           /* negro suave */
+  --primary-foreground: #ffffff;
+
+  --secondary: #575b63;         /* gray-200: sutil pero visible */
+  --secondary-foreground: #0f172a;
+
+  /* UI states */
+  --muted: #f1f5f9;             /* slate-100 */
+  --muted-foreground: #64748b;  /* slate-500 */
+
+  --accent: #0f172a;
+  --accent-foreground: #ffffff;
+
+  --destructive: #000000;       /* minimal incluso para errores */
+  --destructive-foreground: #ffffff;
+
+  /* Borders & inputs */
+  --border: #e5e7eb;            /* gray-200 */
+  --input: #ffffff;
+  --ring: #0f172a;
+
+  /* Charts (escala de grises moderna) */
+  --chart-1: #0f172a;
+  --chart-2: #334155;           /* slate-700 */
+  --chart-3: #64748b;           /* slate-500 */
+  --chart-4: #94a3b8;           /* slate-400 */
+  --chart-5: #cbd5e1;           /* slate-300 */
+
+  /* Radius */
+  --radius: 0.75rem;            /* un pelín más moderno */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --border-radius: var(--radius);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-destructive: var(--destructive);
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}

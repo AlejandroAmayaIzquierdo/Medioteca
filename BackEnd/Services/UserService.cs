@@ -12,9 +12,9 @@ public class UserService(MediotecaDbContext dbContext)
     {
         return await _dbContext
             .Users.Include(u => u.UserRoles)
-            .ThenInclude(ur => ur.Role)
-            .ThenInclude(rp => rp.RolePermissions)
-            .ThenInclude(p => p.Permission)
+                .ThenInclude(ur => ur.Role)
+                    .ThenInclude(rp => rp.RolePermissions)
+                        .ThenInclude(p => p.Permission)
             .FirstOrDefaultAsync(u => u.Id == id);
     }
 }

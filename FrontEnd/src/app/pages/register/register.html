@@ -1,0 +1,67 @@
+<div class="w-full h-full flex items-center justify-center bg-background absolute top-0 left-0">
+  <!-- Formulario -->
+  <div class="flex flex-1 items-center justify-center px-4 pb-16">
+    <div class="w-full max-w-xl rounded-lg bg-card shadow-2xl p-5">
+      <div class="w-full flex flex-col justify-center items-center pb-10 pt-5">
+        <h1 class="text-3xl font-bold">Crear cuenta</h1>
+        <span>Unete a la Medioteca</span>
+      </div>
+      <form (submit)="onSubmit($event)">
+        <div class="flex flex-col justify-around gap-4">
+          <div class="flex flex-col gap-1">
+            <label for="user-name" class="font-semibold">Usuario <span class="text-red-500">*</span></label>
+            <input
+              [formField]="registerForm.userName"
+              id="user-name"
+              placeholder="usuario"
+              class="py-2 px-1"
+            />
+          </div>
+          @if (registerForm.userName().touched() && registerForm.userName().invalid()) {
+            <span class="text-sm text-red-500">El nombre de usuario es obligatorio.</span>
+          }
+          <div class="flex flex-col gap-1">
+            <label for="user-email" class="font-semibold">Correo electronico <span class="text-red-500">*</span></label>
+            <input
+              [formField]="registerForm.email"
+              id="user-email"
+              placeholder="email"
+              class="py-2 px-1"
+            />
+          </div>
+          @if (registerForm.email().touched() && registerForm.email().invalid()) {
+            <span class="text-sm text-red-500">El correo electronico es obligatorio.</span>
+          }
+          <div class="flex flex-col gap-1">
+            <label for="user-password" class="font-semibold">Contraseña</label>
+            <input
+              [formField]="registerForm.password"
+              id="user-password"
+              type="password"
+              placeholder="password"
+              class="py-2 px-1"
+            />
+          </div>
+
+          @if (registerForm.password().touched() && registerForm.password().invalid()) {
+            <span class="text-sm text-red-500">La contraseña debe tener al menos 8 caracteres.</span>
+          }
+
+          <button
+            [disabled]="authService.loading()"
+            id="login-button"
+            type="submit"
+            class="rounded p-1 bg-primary text-white font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <div class="w-full flex gap-2 justify-center items-center">
+              Crear cuenta
+              @if (authService.loading()) {
+                <lucide-icon [name]="LoaderIcon" class="w-5 h-5 animate-spin" />
+              }
+            </div>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,10 +1,9 @@
 using DTOs;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Services;
 
-namespace WebServer.Controllers;
+namespace Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -30,10 +29,8 @@ public class AuthController(
             var error = result.Error!;
             var statusCode = error.Code switch
             {
-                "EmailTaken"
-                or "InvalidEmail"
-                or "InvalidPassword"
-                    => StatusCodes.Status400BadRequest,
+                "EmailTaken" or "InvalidEmail" or "InvalidPassword" =>
+                    StatusCodes.Status400BadRequest,
                 "RegistrationFailed" => StatusCodes.Status500InternalServerError,
                 _ => StatusCodes.Status500InternalServerError,
             };
@@ -45,7 +42,7 @@ public class AuthController(
     }
 
     [HttpPost("login")]
-    public async Task<IResult> LoginAsync([FromBody] UserDto req)
+    public async Task<IResult> LoginAsync([FromBody] UserLoginDto req)
     {
         await Task.CompletedTask;
         var userAgent = HttpContext.Request.Headers.UserAgent;
@@ -70,10 +67,16 @@ public class AuthController(
         var result = await _authService.LoginUserAsync(req, device);
 
         if (result.IsFailure)
-            return Results.Problem(
-                result.Error!.Description,
-                statusCode: StatusCodes.Status500InternalServerError
-            );
+        {
+            var error = result.Error!;
+            var statusCode = error.Code switch
+            {
+                "InvalidCredentials" => StatusCodes.Status401Unauthorized,
+                _ => StatusCodes.Status500InternalServerError,
+            };
+
+            return Results.Problem(error.Description, statusCode: statusCode);
+        }
 
         var tokenResponse = result.Value;
 
@@ -96,16 +99,16 @@ public class AuthController(
             new() { IpAddress = ipAddress, UserAgent = userAgent! }
         );
 
-        // bool isValidDevice = await _deviceService.ValidateDevice(
-        //     deviceRequest,
-        //     req.ExpiredAccessToken
-        // );
+        bool isValidDevice = await _deviceService.ValidateDevice(
+            deviceRequest,
+            req.ExpiredAccessToken
+        );
 
-        // if (!isValidDevice)
-        //     return Results.Problem(
-        //         "Unauthorized device",
-        //         statusCode: StatusCodes.Status400BadRequest
-        //     );
+        if (!isValidDevice)
+            return Results.Problem(
+                "Unauthorized device",
+                statusCode: StatusCodes.Status400BadRequest
+            );
 
         var user = await _userService.GetUserByIdAsync(req.UserId);
         var isTokenValid = await _authService.ValidateRefreshTokenAsync(req);

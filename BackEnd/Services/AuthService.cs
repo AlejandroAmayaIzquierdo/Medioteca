@@ -41,15 +41,14 @@ public class AuthService(JWTHandler jwtHandler, MediotecaDbContext dbContext)
 
             var userId = Guid.NewGuid();
 
-            User newUser =
-                new()
-                {
-                    PasswordHash = hashedPassword,
-                    Id = userId,
-                    UserName = userDto.UserName.ToLower(),
-                    Email = email,
-                    UserRoles = [new UserRole() { UserId = userId, RoleId = 2 }], // XXX Hardcoded 'User' Role
-                };
+            User newUser = new()
+            {
+                PasswordHash = hashedPassword,
+                Id = userId,
+                UserName = userDto.UserName.ToLower(),
+                Email = email,
+                UserRoles = [new UserRole() { UserId = userId, RoleId = 2 }], // XXX Hardcoded 'User' Role
+            };
 
             _dbContext.Users.Add(newUser);
 
@@ -63,13 +62,13 @@ public class AuthService(JWTHandler jwtHandler, MediotecaDbContext dbContext)
         }
     }
 
-    public async Task<Result<TokenResponseDto>> LoginUserAsync(UserDto userDto, Device device)
+    public async Task<Result<TokenResponseDto>> LoginUserAsync(UserLoginDto userDto, Device device)
     {
         var user = await _dbContext
             .Users.Include(u => u.UserRoles)
-            .ThenInclude(ur => ur.Role)
-            .ThenInclude(rp => rp.RolePermissions)
-            .ThenInclude(p => p.Permission)
+                .ThenInclude(ur => ur.Role)
+                    .ThenInclude(rp => rp.RolePermissions)
+                        .ThenInclude(p => p.Permission)
             .FirstOrDefaultAsync(u => u.Email.ToLower() == userDto.Email.ToLower());
 
         bool isCredentialsWrong = false;
@@ -123,7 +122,7 @@ public class AuthService(JWTHandler jwtHandler, MediotecaDbContext dbContext)
                 AccessToken = newAccessToken,
                 UserId = user.Id,
                 RefreshToken = refreshToken,
-                RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(2),
+                RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(5),
                 DeviceId = device?.DeviceId,
             };
             _dbContext.Sessions.Add(session);
@@ -132,7 +131,7 @@ public class AuthService(JWTHandler jwtHandler, MediotecaDbContext dbContext)
         {
             session.AccessToken = newAccessToken;
             session.RefreshToken = refreshToken;
-            session.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(2);
+            session.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(5);
 
             _dbContext.Sessions.Update(session);
         }

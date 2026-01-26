@@ -24,6 +24,7 @@ public class JWTHandler(IConfiguration configuration)
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Name, user.UserName),
             new(ClaimTypes.Role, string.Join(",", user.UserRoles.Select(ur => ur.Role?.Name))),
+            new(ClaimTypes.Email, user.Email),
             new("permissions", string.Join(",", permissions)),
         };
 
@@ -37,7 +38,7 @@ public class JWTHandler(IConfiguration configuration)
             issuer: _configuration.GetValue<string>("JWTSecurity:Issuer"),
             audience: _configuration.GetValue<string>("JWTSecurity:Audience"),
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(1),
+            expires: DateTime.UtcNow.AddMinutes(30),
             signingCredentials: creds
         );
 

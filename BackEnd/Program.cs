@@ -28,17 +28,6 @@ builder.Services.AddHttpLogging(logging =>
 
 builder.Services.AddOpenApi();
 
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-    {
-        policy
-            .WithOrigins("http://localhost:5173", "http://localhost:3000")
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
-});
-
 builder.Services.AddDbContext<MediotecaDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Local"))
 );
@@ -75,8 +64,21 @@ builder
     .AddPolicy("UserAccess", policy => policy.RequirePermissions(PermissionTypes.UserAccess))
     .AddPolicy("AdminAccess", policy => policy.RequirePermissions(PermissionTypes.AdminAccess));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "FrontEnd",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
+        }
+    );
+});
+
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<JWTHandler>();
+builder.Services.AddScoped<DeviceService>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<UserContext>();
@@ -101,10 +103,10 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+app.UseCors("FrontEnd");
 app.UseHttpsRedirection();
 
-app.UseCors();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
