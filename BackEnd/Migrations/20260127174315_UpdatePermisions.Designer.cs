@@ -3,6 +3,7 @@ using System;
 using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace medioteca.Migrations
 {
     [DbContext(typeof(MediotecaDbContext))]
-    partial class MediotecaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260127174315_UpdatePermisions")]
+    partial class UpdatePermisions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.2");
@@ -112,7 +115,7 @@ namespace medioteca.Migrations
                         {
                             Id = 2,
                             Active = true,
-                            Description = "Regular user that can view and create media",
+                            Description = "Regular user that can play daily challenges",
                             Name = "User"
                         });
                 });
@@ -235,15 +238,6 @@ namespace medioteca.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
-                            Email = "admin@gmail.com",
-                            PasswordHash = "$argon2id$v=19$m=65536,t=3,p=1$YJWOX/HegOyik3549zUWxw$Xr+95M2c54e3QnfdrYtD+R2KtD+R4GBOtFeLVnX2Xno",
-                            UserName = "admin"
-                        });
                 });
 
             modelBuilder.Entity("Models.UserRole", b =>
@@ -265,14 +259,6 @@ namespace medioteca.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = -1,
-                            RoleId = 1,
-                            UserId = new Guid("11111111-1111-1111-1111-111111111111")
-                        });
                 });
 
             modelBuilder.Entity("Models.Permission", b =>

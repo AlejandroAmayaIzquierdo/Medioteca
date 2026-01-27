@@ -1,3 +1,4 @@
+using Isopoh.Cryptography.Argon2;
 using Microsoft.EntityFrameworkCore;
 using Models;
 
@@ -21,62 +22,37 @@ public class MediotecaDbContext(DbContextOptions options) : DbContext(options)
     {
         base.OnModelCreating(modelBuilder);
 
-        // Seed roles
+        // Roles
         modelBuilder
             .Entity<Role>()
             .HasData(
                 new Role
                 {
-                    Id = 1,
+                    Id = (int)RoleTypes.Admin,
                     Name = "Admin",
                     Description = "Administrator role with full access",
                     Active = true,
                 },
                 new Role
                 {
-                    Id = 2,
+                    Id = (int)RoleTypes.User,
                     Name = "User",
-                    Description = "Regular user that can play daily challenges",
-                    Active = true,
-                },
-                new Role
-                {
-                    Id = 3,
-                    Name = "Moderator",
-                    Description = "Moderator that can create/edit challenges but not full admin",
+                    Description = "Regular user that can view and create media",
                     Active = true,
                 }
             );
+
+        // Permissions
         modelBuilder
             .Entity<Permission>()
             .HasData(
                 new Permission { Id = (int)PermissionTypes.AdminAccess, Name = "AdminAccess" },
                 new Permission { Id = (int)PermissionTypes.UserAccess, Name = "UserAccess" },
-                new Permission { Id = (int)PermissionTypes.PlayChallenge, Name = "PlayChallenge" },
-                new Permission { Id = (int)PermissionTypes.ViewHistory, Name = "ViewHistory" },
-                new Permission
-                {
-                    Id = (int)PermissionTypes.ViewLeaderboard,
-                    Name = "ViewLeaderboard",
-                },
-                new Permission
-                {
-                    Id = (int)PermissionTypes.CreateChallenge,
-                    Name = "CreateChallenge",
-                },
-                new Permission { Id = (int)PermissionTypes.EditChallenge, Name = "EditChallenge" },
-                new Permission
-                {
-                    Id = (int)PermissionTypes.DeleteChallenge,
-                    Name = "DeleteChallenge",
-                },
-                new Permission
-                {
-                    Id = (int)PermissionTypes.ViewFutureChallenges,
-                    Name = "ViewFutureChallenges",
-                }
+                new Permission { Id = (int)PermissionTypes.ManageUsers, Name = "ManageUsers" },
+                new Permission { Id = (int)PermissionTypes.CanCreateMedia, Name = "CanCreateMedia" }
             );
 
+        // Relation between Roles and Permissions
         modelBuilder
             .Entity<RolePermission>()
             .HasData(
@@ -84,124 +60,66 @@ public class MediotecaDbContext(DbContextOptions options) : DbContext(options)
                 new RolePermission
                 {
                     Id = 1,
-                    RoleId = 1,
+                    RoleId = (int)RoleTypes.Admin,
                     PermissionId = (int)PermissionTypes.AdminAccess,
                 },
                 new RolePermission
                 {
                     Id = 2,
-                    RoleId = 1,
+                    RoleId = (int)RoleTypes.Admin,
                     PermissionId = (int)PermissionTypes.UserAccess,
                 },
                 new RolePermission
                 {
                     Id = 3,
-                    RoleId = 1,
-                    PermissionId = (int)PermissionTypes.PlayChallenge,
-                },
-                new RolePermission
-                {
-                    Id = 4,
-                    RoleId = 1,
-                    PermissionId = (int)PermissionTypes.ViewHistory,
+                    RoleId = (int)RoleTypes.Admin,
+                    PermissionId = (int)PermissionTypes.ManageUsers,
                 },
                 new RolePermission
                 {
                     Id = 5,
-                    RoleId = 1,
-                    PermissionId = (int)PermissionTypes.ViewLeaderboard,
-                },
-                new RolePermission
-                {
-                    Id = 6,
-                    RoleId = 1,
-                    PermissionId = (int)PermissionTypes.CreateChallenge,
-                },
-                new RolePermission
-                {
-                    Id = 7,
-                    RoleId = 1,
-                    PermissionId = (int)PermissionTypes.EditChallenge,
-                },
-                new RolePermission
-                {
-                    Id = 8,
-                    RoleId = 1,
-                    PermissionId = (int)PermissionTypes.DeleteChallenge,
-                },
-                new RolePermission
-                {
-                    Id = 9,
-                    RoleId = 1,
-                    PermissionId = (int)PermissionTypes.ViewFutureChallenges,
+                    RoleId = (int)RoleTypes.Admin,
+                    PermissionId = (int)PermissionTypes.CanCreateMedia,
                 },
                 // User (básico)
                 new RolePermission
                 {
-                    Id = 10,
-                    RoleId = 2,
+                    Id = 6,
+                    RoleId = (int)RoleTypes.User,
                     PermissionId = (int)PermissionTypes.UserAccess,
                 },
                 new RolePermission
                 {
-                    Id = 11,
-                    RoleId = 2,
-                    PermissionId = (int)PermissionTypes.PlayChallenge,
-                },
-                new RolePermission
+                    Id = 7,
+                    RoleId = (int)RoleTypes.User,
+                    PermissionId = (int)PermissionTypes.CanCreateMedia,
+                }
+            );
+
+        const string adminUserId = "11111111-1111-1111-1111-111111111111";
+        const string AdminPasswordHash =
+            "$argon2id$v=19$m=65536,t=3,p=1$YJWOX/HegOyik3549zUWxw$Xr+95M2c54e3QnfdrYtD+R2KtD+R4GBOtFeLVnX2Xno";
+
+        modelBuilder
+            .Entity<User>()
+            .HasData(
+                new User
                 {
-                    Id = 12,
-                    RoleId = 2,
-                    PermissionId = (int)PermissionTypes.ViewHistory,
-                },
-                new RolePermission
+                    Id = Guid.Parse(adminUserId),
+                    UserName = "admin",
+                    Email = "admin@gmail.com",
+                    PasswordHash = AdminPasswordHash,
+                }
+            );
+
+        modelBuilder
+            .Entity<UserRole>()
+            .HasData(
+                new UserRole
                 {
-                    Id = 13,
-                    RoleId = 2,
-                    PermissionId = (int)PermissionTypes.ViewLeaderboard,
-                },
-                // Moderator (curador de retos)
-                new RolePermission
-                {
-                    Id = 14,
-                    RoleId = 3,
-                    PermissionId = (int)PermissionTypes.UserAccess,
-                },
-                new RolePermission
-                {
-                    Id = 15,
-                    RoleId = 3,
-                    PermissionId = (int)PermissionTypes.PlayChallenge,
-                },
-                new RolePermission
-                {
-                    Id = 16,
-                    RoleId = 3,
-                    PermissionId = (int)PermissionTypes.ViewHistory,
-                },
-                new RolePermission
-                {
-                    Id = 17,
-                    RoleId = 3,
-                    PermissionId = (int)PermissionTypes.ViewLeaderboard,
-                },
-                new RolePermission
-                {
-                    Id = 18,
-                    RoleId = 3,
-                    PermissionId = (int)PermissionTypes.CreateChallenge,
-                },
-                new RolePermission
-                {
-                    Id = 19,
-                    RoleId = 3,
-                    PermissionId = (int)PermissionTypes.EditChallenge,
-                },
-                new RolePermission
-                {
-                    Id = 20,
-                    RoleId = 3,
-                    PermissionId = (int)PermissionTypes.ViewFutureChallenges,
+                    Id = -1,
+                    UserId = Guid.Parse(adminUserId),
+                    RoleId = (int)RoleTypes.Admin,
                 }
             );
     }

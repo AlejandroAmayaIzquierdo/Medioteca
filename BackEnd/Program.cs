@@ -62,7 +62,8 @@ builder
 builder
     .Services.AddAuthorizationBuilder()
     .AddPolicy("UserAccess", policy => policy.RequirePermissions(PermissionTypes.UserAccess))
-    .AddPolicy("AdminAccess", policy => policy.RequirePermissions(PermissionTypes.AdminAccess));
+    .AddPolicy("AdminAccess", policy => policy.RequirePermissions(PermissionTypes.AdminAccess))
+    .AddPolicy("MangeUsers", policy => policy.RequirePermissions(PermissionTypes.ManageUsers));
 
 builder.Services.AddCors(options =>
 {
@@ -79,9 +80,6 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<JWTHandler>();
 builder.Services.AddScoped<DeviceService>();
-
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddTransient<UserContext>();
 
 var app = builder.Build();
 

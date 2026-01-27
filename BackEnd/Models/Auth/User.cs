@@ -11,7 +11,10 @@ public class User
     [JsonIgnore]
     public string PasswordHash { get; set; } = string.Empty;
 
+    [JsonIgnore]
     public Guid? ProfilePicId { get; set; } = null;
+
+    [JsonIgnore]
     public string? ProfilePicLink { get; set; } = null;
 
     public virtual ICollection<UserRole> UserRoles { get; set; } = [];

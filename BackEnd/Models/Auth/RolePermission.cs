@@ -13,5 +13,5 @@ public class RolePermission
     public virtual Role? Role { get; set; }
 
     [JsonIgnore]
-    public virtual Permission? Permission { get; set; }
+    public virtual Permission Permission { get; set; } = null!;
 }

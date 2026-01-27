@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Models;
 
@@ -20,14 +21,16 @@ public static class AuthorizationUtil
                 context.User.Claims.FirstOrDefault(claim => claim.Type == "permissions")?.Value
                 ?? string.Empty;
 
-            if (string.IsNullOrEmpty(userPermissionsString))
+            ClaimPermission[] userPermissions =
+                JsonSerializer.Deserialize<ClaimPermission[]>(userPermissionsString) ?? [];
+
+            if (userPermissions.Length == 0)
                 return false;
 
-            // Parse user's permissions into a list of integers
-            var userPermissions = userPermissionsString.Split(',').Select(int.Parse).ToList();
-
             // Check if all required permissions are present in the user's permissions
-            return requiredPermissions.All(p => userPermissions.Contains((int)p));
+            return requiredPermissions.All(p =>
+                userPermissions.Select(up => up.Id).Contains((int)p)
+            );
         });
     }
 }

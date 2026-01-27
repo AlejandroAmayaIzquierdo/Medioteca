@@ -7,6 +7,8 @@ public class Role
     public int Id { get; set; } = 0;
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+
+    [JsonIgnore]
     public ICollection<RolePermission> RolePermissions { get; set; } = [];
     public bool Active { get; set; } = true;
 
@@ -16,4 +18,10 @@ public class Role
 
     [JsonIgnore]
     public virtual ICollection<Permission> Permissions { get; set; } = [];
+}
+
+public enum RoleTypes
+{
+    Admin = 1,
+    User = 2,
 }

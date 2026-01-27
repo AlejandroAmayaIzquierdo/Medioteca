@@ -67,8 +67,8 @@ public class AuthService(JWTHandler jwtHandler, MediotecaDbContext dbContext)
         var user = await _dbContext
             .Users.Include(u => u.UserRoles)
                 .ThenInclude(ur => ur.Role)
-                    .ThenInclude(rp => rp.RolePermissions)
-                        .ThenInclude(p => p.Permission)
+                    .ThenInclude(r => r!.RolePermissions)
+                        .ThenInclude(rp => rp.Permission)
             .FirstOrDefaultAsync(u => u.Email.ToLower() == userDto.Email.ToLower());
 
         bool isCredentialsWrong = false;

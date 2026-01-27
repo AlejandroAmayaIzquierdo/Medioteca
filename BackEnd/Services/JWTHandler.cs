@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Models;
+using Newtonsoft.Json;
 
 namespace Services;
 
@@ -15,17 +16,22 @@ public class JWTHandler(IConfiguration configuration)
     {
         var permissions = user
             .UserRoles.SelectMany(ur => ur.Role?.RolePermissions ?? [])
-            .Select(rp => rp.Permission.Id)
+            .Select(rp => new ClaimPermission(rp.Permission.Id, rp.Permission.Name))
             .Distinct()
+            .ToList();
+
+        var roles = user
+            .UserRoles.Where(ur => ur.Role != null)
+            .Select(ur => new { id = ur.Role!.Id, name = ur.Role.Name })
             .ToList();
 
         var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Name, user.UserName),
-            new(ClaimTypes.Role, string.Join(",", user.UserRoles.Select(ur => ur.Role?.Name))),
+            new(ClaimTypes.Role, JsonConvert.SerializeObject(roles)),
             new(ClaimTypes.Email, user.Email),
-            new("permissions", string.Join(",", permissions)),
+            new("permissions", JsonConvert.SerializeObject(permissions)),
         };
 
         var key = new SymmetricSecurityKey(
