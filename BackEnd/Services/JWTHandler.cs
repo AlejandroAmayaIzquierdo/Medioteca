@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Models;
 using Newtonsoft.Json;
+using Util;
 
 namespace Services;
 
@@ -29,9 +30,9 @@ public class JWTHandler(IConfiguration configuration)
         {
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Name, user.UserName),
-            new(ClaimTypes.Role, JsonConvert.SerializeObject(roles)),
+            new(ClaimTypes.Role, JsonConvert.SerializeObject(roles, JsonSettings.Default)),
             new(ClaimTypes.Email, user.Email),
-            new("permissions", JsonConvert.SerializeObject(permissions)),
+            new("permissions", JsonConvert.SerializeObject(permissions, JsonSettings.Default)),
         };
 
         var key = new SymmetricSecurityKey(

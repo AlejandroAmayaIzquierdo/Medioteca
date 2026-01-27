@@ -1,6 +1,7 @@
-using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Models;
+using Newtonsoft.Json;
+using Util;
 
 public static class AuthorizationUtil
 {
@@ -22,7 +23,10 @@ public static class AuthorizationUtil
                 ?? string.Empty;
 
             ClaimPermission[] userPermissions =
-                JsonSerializer.Deserialize<ClaimPermission[]>(userPermissionsString) ?? [];
+                JsonConvert.DeserializeObject<ClaimPermission[]>(
+                    userPermissionsString,
+                    JsonSettings.Default
+                ) ?? [];
 
             if (userPermissions.Length == 0)
                 return false;

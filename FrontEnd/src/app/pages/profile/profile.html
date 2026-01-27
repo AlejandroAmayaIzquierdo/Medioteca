@@ -1,0 +1,54 @@
+<div class="w-full h-full flex flex-col items-center justify-center bg-background absolute top-0 left-0">
+    <!-- <app-back-button [returnUrl]="`/`"/> -->
+    <div class="flex flex-1 items-center justify-center px-4 pb-16">
+            <div class="w-full max-w-xl min-w-xl rounded-lg bg-card shadow-2xl p-5">
+                <div class="w-full flex flex-col justify-center items-center pb-10 pt-5">
+                    <h1 class="text-3xl font-bold">Perfil de usuario</h1>
+                    <span>Gestiona la información de tu cuenta</span>
+                </div>
+                
+
+                
+                <div class="flex flex-col justify-around gap-4">
+                    <form (submit)="onSubmit($event)">
+                    <div class="flex flex-col gap-1">
+                        <label for="user-name" class="font-semibold">Nombre de usuario</label>
+                        <input
+                            id="user-name"
+                            placeholder="usuario"
+                            class="py-2 px-1 ml-1 rounded shadow-sm focus:border transition-all"
+                            [formField]="updateUserForm.userName!"
+                        />
+                    </div>
+                    @if (updateUserForm.userName!().touched() && updateUserForm.userName!().invalid()) {
+                        <span class="text-sm text-red-500">El nombre de usuario es obligatorio.</span>
+                    }
+                    <div class="flex flex-col gap-1">
+                        <label for="user-email" class="font-semibold">Correo electrónico</label>
+                        <input
+                            id="user-email"
+                            placeholder="email"
+                            class="py-2 px-1 ml-1 rounded shadow-sm focus:border transition-all disabled:cursor-not-allowed"
+                            [value]="authService.user()?.email"
+                            disabled
+                        />
+                    </div>
+
+                    <div class="rounded bg-gray-200 p-2 flex flex-col">
+                        <label class="font-semibold mb-2 inline-block">Roles asignados: </label>
+                        <div class="flex flex-wrap gap-2">
+                            @for (rol of authService.user()?.roles; track $index) {
+                                <span class="inline-block text-primary text-sm px-2 py-1 rounded mr-2 bg-blue-200/80">
+                                    {{ rol.name }}
+                                </span>
+                            }
+                        </div>
+                    </div>
+
+                    <button
+                        [disabled]="updateUserForm().invalid()"
+                        class="w-full bg-primary text-white py-2 rounded hover:bg-primary/90 transition-all font-semibold mt-4 disabled:cursor-not-allowed disabled:opacity-50" type="submit">Guardar cambios</button>
+            </form>
+                    </div>
+    </div>
+</div>

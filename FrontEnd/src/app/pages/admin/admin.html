@@ -1,1 +1,21 @@
-<p>admin works!</p>
+<div hlmTableContainer>
+  <table hlmTable>
+    <caption hlmCaption>
+      A list of your users.
+    </caption>
+    <thead hlmTHead>
+      <tr hlmTr>
+        <th hlmTh class="w-[100px]">Nombre</th>
+        <th hlmTh>Email</th>
+      </tr>
+    </thead>
+    <tbody hlmTBody>
+      @for (user of users(); track user.id) {
+      <tr hlmTr>
+        <td hlmTd class="font-medium">{{ user.userName }}</td>
+        <td hlmTd>{{ user.email }}</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>

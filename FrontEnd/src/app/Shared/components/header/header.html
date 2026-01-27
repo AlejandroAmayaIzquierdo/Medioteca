@@ -1,16 +1,74 @@
 <header
   class="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-md"
 >
-      <nav class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
-        <a routerLink="/" class="text-2xl font-bold cursor-pointer">Medioteca</a>
-        <div class="flex items-center gap-4">
-          @if (authService.user()) {
-            <span class="font-semibold">Hola, {{ authService.user()?.userName }}</span>
-          } @else {
-          <button routerLink="/login" class="hover:underline cursor-pointer hover:bg-gray-200 px-3 py-1 rounded">Login</button>
-          <button routerLink="/register" class="px-3 py-1 bg-primary text-white hover:bg-secondary rounded transition cursor-pointer">Register</button>
-          }
-
-        </div>
-      </nav>
+  <nav class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+    <a routerLink="/" class="text-2xl font-bold cursor-pointer">Medioteca</a>
+    <div class="flex items-center gap-4">
+      @if (authService.user()) {
+        <hlm-popover>
+          <button
+            hlmPopoverTrigger
+            class="flex items-center gap-2 hover:bg-gray-200 px-3 py-1 rounded cursor-pointer"
+          >
+            <hlm-avatar>
+              <span hlmAvatarFallback>{{
+                authService.user()?.userName?.charAt(0)?.toUpperCase()
+              }}</span>
+            </hlm-avatar>
+            {{ authService.user()?.userName }}
+          </button>
+          <div hlmPopoverContent *brnPopoverContent="let ctx">
+            <h1 class="text-lg font-semibold">{{ authService.user()?.userName }}</h1>
+            <p class="text-sm text-muted-foreground mb-2">{{ authService.user()?.email }}</p>
+            <hlm-separator />
+            <button
+              hlmBtn
+              variant="ghost"
+              class="w-full text-left"
+              routerLink="/profile"
+            >
+              <div class="flex justify-start items-center w-full">
+                <lucide-icon [name]="SettingsIcon" [size]="15" class="mr-2" />
+                <span>Mi perfil</span>
+              </div>
+            </button>
+            @if (authService.hasPermission(AdminAccess)) {
+              <button
+                hlmBtn
+                variant="ghost"
+                class="w-full text-left"
+                routerLink="/admin"
+              >
+                <div class="flex justify-start items-center w-full">
+                  <lucide-icon [name]="ShieldIcon" [size]="15" class="mr-2" />
+                  <span>Admin</span>
+                </div>
+              </button>
+            }
+            <hlm-separator />
+            <button hlmBtn variant="ghost" class="w-full text-left" (click)="authService.logout()">
+              <div class="flex justify-start items-center w-full">
+                <lucide-icon [name]="LogOutIcon" [size]="15" class="mr-2" />
+                <span class="text-destructive">Cerrar sesión</span>
+              </div>
+            </button>
+          </div>
+        </hlm-popover>
+      } @else {
+        <button
+          hlmBtn
+          variant="ghost"
+          routerLink="/login"
+        >
+          Login
+        </button>
+        <button
+          hlmBtn
+          routerLink="/register"
+        >
+          Register
+        </button>
+      }
+    </div>
+  </nav>
 </header>

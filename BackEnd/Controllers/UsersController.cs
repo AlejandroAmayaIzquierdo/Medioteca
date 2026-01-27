@@ -27,6 +27,21 @@ public class UsersController(UserService userService) : ControllerBase
         return Results.Ok(user);
     }
 
+    [HttpPatch("me")]
+    [Authorize]
+    public async Task<IResult> UpdateProfileAsync([FromBody] UpdateUserProfileDto updateDto)
+    {
+        var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+        if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+            return Results.Unauthorized();
+
+        var updatedUser = await _userService.UpdateUserProfileAsync(userId, updateDto);
+        if (updatedUser == null)
+            return Results.NotFound();
+
+        return Results.Ok(updatedUser);
+    }
+
     [HttpGet]
     [Authorize(Policy = "AdminAccess")]
     public async Task<IResult> GetAllUsersAsync([FromQuery] UsersQuery query)

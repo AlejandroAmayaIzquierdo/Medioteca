@@ -1,7 +1,7 @@
 import { computed, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { User } from '../models/Auth/User';
+import { ClaimPermissions, ClaimRoles, User } from '../models/Auth/User';
 import { catchError, tap, throwError } from 'rxjs';
 import {
   JwtLoginPayload,
@@ -26,6 +26,16 @@ export class AuthService {
   public readonly isAuthenticated = computed(() => this.currentUser() !== undefined);
   public readonly loading = this.isLoading.asReadonly();
   public readonly user = this.currentUser.asReadonly();
+
+  public readonly hasPermission = (permissionName: string) => {
+    console.log('Checking permission:', permissionName);
+    console.log('Current User Permissions:', this.currentUser()?.permissions);
+    const user = this.currentUser();
+    if (!user || !user.permissions) {
+      return false;
+    }
+    return user.permissions.some((p) => p.name === permissionName);
+  };
 
   constructor(
     private http: HttpClient,
@@ -97,6 +107,13 @@ export class AuthService {
     );
   }
 
+  public logout() {
+    localStorage.removeItem(this.ACCESS_TOKEN_KEY);
+    localStorage.removeItem(this.REFRESH_TOKEN_KEY);
+    this.currentUser.set(null);
+    this.router.navigate(['/login']);
+  }
+
   private setSession(AuthResponse: LoginResponseDto) {
     const accessToken = AuthResponse.accessToken;
     const refreshToken = AuthResponse.refreshToken;
@@ -118,13 +135,17 @@ export class AuthService {
 
     const rolString = payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
 
-    const roles = rolString ? rolString.split(',') : [];
+    const roles = JSON.parse(rolString) as ClaimRoles[];
+
+    const permissionsString = payload['permissions'];
+    const permissions = JSON.parse(permissionsString) as ClaimPermissions[];
 
     const user: User = {
       id: payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'],
       userName: payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
       email: payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
-      rol: roles,
+      roles,
+      permissions,
       expiredAt: payload.exp ? new Date(payload.exp * 1000) : undefined,
     };
 

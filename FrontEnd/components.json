@@ -1,0 +1,4 @@
+{
+  "componentsPath": "src/app/Shared/ui",
+  "importAlias": "@spartan-ng/helm"
+}

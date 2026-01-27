@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AdminAuthGuard } from './pages/admin/AdminAuth.guard';
+import { UserAuthGuard } from './pages/profile/UserAuth.guard';
 
 export const routes: Routes = [
   {
@@ -31,5 +32,13 @@ export const routes: Routes = [
       return m.Admin;
     },
     canActivate: [AdminAuthGuard],
+  },
+  {
+    path: 'profile',
+    loadComponent: async () => {
+      const m = await import('./pages/profile/profile');
+      return m.Profile;
+    },
+    canActivate: [UserAuthGuard],
   },
 ];

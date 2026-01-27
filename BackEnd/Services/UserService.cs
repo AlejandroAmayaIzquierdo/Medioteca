@@ -44,6 +44,19 @@ public class UserService(MediotecaDbContext dbContext)
         return await PagedList<User>.CreateAsync(usersQuery, query.PageNumber, query.PageSize);
     }
 
+    public async Task<User?> UpdateUserProfileAsync(Guid userId, UpdateUserProfileDto updateDto)
+    {
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        if (user == null)
+            return null;
+
+        if (!string.IsNullOrEmpty(updateDto.UserName))
+            user.UserName = updateDto.UserName;
+
+        await _dbContext.SaveChangesAsync();
+        return user;
+    }
+
     private static Expression<Func<User, object>> GetSortProperty(UsersQuery query)
     {
         return query.OrderBy?.ToLower() switch
