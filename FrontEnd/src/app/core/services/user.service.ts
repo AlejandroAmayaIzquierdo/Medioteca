@@ -61,4 +61,24 @@ export class UserService {
         }),
       );
   }
+
+  public deactivateUser(userId: string) {
+    this.isLoading.set(true);
+
+    const token = this.authService.getToken();
+
+    return this.http
+      .delete<void>(`${this.apiUrl}/${userId}`, {
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      })
+      .pipe(
+        tap(() => {
+          this.isLoading.set(false);
+        }),
+        catchError((error) => {
+          this.isLoading.set(false);
+          return throwError(() => error);
+        }),
+      );
+  }
 }

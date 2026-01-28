@@ -1,3 +1,5 @@
+import { Roles } from './Roles';
+
 export interface User {
   id: string;
   userName: string;
@@ -21,4 +23,7 @@ export interface WebApiUserDto {
   id: string;
   userName: string;
   email: string;
+  userRoles: Roles[];
+  isActive: boolean;
+  createdAt: Date;
 }

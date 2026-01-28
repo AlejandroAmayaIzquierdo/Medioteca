@@ -1,21 +1,104 @@
-<div hlmTableContainer>
-  <table hlmTable>
-    <caption hlmCaption>
-      A list of your users.
-    </caption>
-    <thead hlmTHead>
-      <tr hlmTr>
-        <th hlmTh class="w-[100px]">Nombre</th>
-        <th hlmTh>Email</th>
-      </tr>
-    </thead>
-    <tbody hlmTBody>
-      @for (user of users(); track user.id) {
-      <tr hlmTr>
-        <td hlmTd class="font-medium">{{ user.userName }}</td>
-        <td hlmTd>{{ user.email }}</td>
-      </tr>
-      }
-    </tbody>
-  </table>
+<h1 class="text-3xl font-bold mb-4">
+  <lucide-icon [name]="ShieldIcon" [size]="30" class="inline-block mr-1" />
+  <span class="align-middle">Panel de administración</span>
+</h1>
+<h2 class="text-lg text-muted-foreground font-semibold mb-6">Gestión de usuarios</h2>
+
+<div class="w-full grid grid-cols-2 gap-6">
+  <section hlmCard>
+    <div hlmCardHeader>
+      <h3 hlmCardTitle>
+        <div class="flex items-center gap-2 justify-between">
+          <span>Usuarios Activos</span>
+          <lucide-icon [name]="UsersIcon" [size]="15" />
+        </div>
+      </h3>
+    </div>
+    <p hlmCardContent class="font-bold">
+      {{ users().length }}
+    </p>
+  </section>
+  <section hlmCard>
+    <div hlmCardHeader>
+      <h3 hlmCardTitle>
+        <div class="flex items-center gap-2 justify-between">
+          <span>Usuarios Desactivados</span>
+          <lucide-icon [name]="UserXIcon" [size]="15" [color]="'red'" />
+        </div>
+      </h3>
+    </div>
+    <p hlmCardContent class="font-bold" class="text-destructive font-bold">
+      {{ deactivatedUsers().length }}
+    </p>
+  </section>
+</div>
+
+<div class="mt-10">
+  <section hlmCard>
+    <div hlmCardContent>
+      <div hlmTableContainer>
+        <table hlmTable>
+          <caption hlmCaption>
+            A list of your users.
+          </caption>
+          <thead hlmTHead>
+            <tr hlmTr>
+              <th hlmTh class="w-[100px]">Nombre</th>
+              <th hlmTh>Email</th>
+              <th hlmTh>Roles</th>
+              <th hlmTh>Creado el</th>
+              <th hlmTh>Activo</th>
+              <th hlmTh>Acciones</th>
+            </tr>
+          </thead>
+          <tbody hlmTBody>
+            @for (user of users(); track user.id) {
+              <tr hlmTr>
+                <td hlmTd class="font-medium">{{ user.userName }}</td>
+                <td hlmTd>{{ user.email }}</td>
+                <td hlmTd>
+                  @for (role of user.userRoles; track role.id) {
+                    <span
+                      class="inline-block text-primary text-sm px-2 py-1 rounded mr-2 bg-blue-200/80"
+                    >
+                      {{ role.role.name }}
+                    </span>
+                  }
+                </td>
+                <td hlmTd>{{ user.createdAt | date: 'dd-MM-yyyy' }}</td>
+                <td hlmTd>
+                  @if (user.isActive) {
+                    <span class="bg-green-600 text-white rounded-md px-2 py-0.5 font-semibold"
+                      >Activo</span
+                    >
+                  } @else {
+                    <span class="bg-destructive text-white rounded-md px-2 py-0.5 font-semibold"
+                      >Desactivado</span
+                    >
+                  }
+                </td>
+                <td hlmTd>
+                  @if (user.id !== authService.user()?.id) {
+                  <button
+                    hlmBtn
+                    [variant]="!user.isActive ? 'default' : 'destructive'"
+                    class="text-sm h-7 hover:cursor-pointer"
+                    (click)="activateOrDeactivateUser(user.id)"
+                  >
+                    <lucide-icon
+                      [name]="user.isActive ? UserXIcon : UserIcon"
+                      [size]="15"
+                      class="inline-block mr-1"/>
+                    {{ user.isActive ? 'Desactivar' : 'Activar' }}
+                  </button>
+                  }
+
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
 </div>

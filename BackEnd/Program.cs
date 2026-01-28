@@ -56,6 +56,7 @@ builder
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["JWTSecurity:Token"]!)
             ),
+            ClockSkew = TimeSpan.Zero, // XXX Ony for testing
         };
     });
 

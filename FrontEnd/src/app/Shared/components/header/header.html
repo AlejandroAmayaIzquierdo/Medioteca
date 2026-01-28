@@ -1,7 +1,7 @@
 <header
   class="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-md"
 >
-  <nav class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+  <nav class="mx-auto px-4 py-4 flex justify-between items-center max-w-375">
     <a routerLink="/" class="text-2xl font-bold cursor-pointer">Medioteca</a>
     <div class="flex items-center gap-4">
       @if (authService.user()) {
@@ -17,7 +17,7 @@
             </hlm-avatar>
             {{ authService.user()?.userName }}
           </button>
-          <div hlmPopoverContent *brnPopoverContent="let ctx">
+          <div hlmPopoverContent *brnPopoverContent="let ctx" class="right-20 top-5 mt-2 p-4 bg-white rounded shadow-lg z-50">
             <h1 class="text-lg font-semibold">{{ authService.user()?.userName }}</h1>
             <p class="text-sm text-muted-foreground mb-2">{{ authService.user()?.email }}</p>
             <hlm-separator />

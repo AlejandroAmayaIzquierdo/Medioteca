@@ -14,9 +14,9 @@ public class UserService(MediotecaDbContext dbContext)
     {
         return await _dbContext
             .Users.Include(u => u.UserRoles)
-            .ThenInclude(ur => ur.Role)
-            .ThenInclude(rp => rp!.RolePermissions)
-            .ThenInclude(p => p.Permission)
+                .ThenInclude(ur => ur.Role)
+                    .ThenInclude(rp => rp!.RolePermissions)
+                        .ThenInclude(p => p.Permission)
             .FirstOrDefaultAsync(u => u.Id == id);
     }
 
@@ -24,7 +24,7 @@ public class UserService(MediotecaDbContext dbContext)
     {
         var usersQuery = _dbContext
             .Users.Include(u => u.UserRoles)
-            .ThenInclude(ur => ur.Role)
+                .ThenInclude(ur => ur.Role)
             .AsQueryable();
 
         if (!string.IsNullOrEmpty(query.SearchTerm))
@@ -52,6 +52,9 @@ public class UserService(MediotecaDbContext dbContext)
 
         if (!string.IsNullOrEmpty(updateDto.UserName))
             user.UserName = updateDto.UserName;
+
+        if (updateDto.IsActive.HasValue)
+            user.IsActive = updateDto.IsActive.Value;
 
         await _dbContext.SaveChangesAsync();
         return user;
