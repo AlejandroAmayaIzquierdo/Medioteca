@@ -33,6 +33,15 @@
       ],
       "@spartan-ng/helm/table": [
         "./src/app/Shared/ui/table/src/index.ts"
+      ],
+      "@spartan-ng/helm/input": [
+        "./src/app/Shared/ui/input/src/index.ts"
+      ],
+      "@spartan-ng/helm/input-group": [
+        "./src/app/Shared/ui/input-group/src/index.ts"
+      ],
+      "@spartan-ng/helm/textarea": [
+        "./src/app/Shared/ui/textarea/src/index.ts"
       ]
     }
   },

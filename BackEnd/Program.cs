@@ -85,6 +85,7 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<JWTHandler>();
 builder.Services.AddScoped<DeviceService>();
+builder.Services.AddScoped<MediaService>();
 
 var app = builder.Build();
 

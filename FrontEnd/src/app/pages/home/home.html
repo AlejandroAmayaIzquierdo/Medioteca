@@ -1,1 +1,19 @@
-<p>home works!</p>
+
+<div class="w-full flex flex-col justify-center items-center">
+    <h1 class="text-6xl font-bold">Medioteca Cultural</h1>
+    <p class="text-lg text-muted-foreground mt-4">Explora y disfruta de nuestra colección de contenidos culturales</p>
+
+    <div class="w-full grid-cols-5 gap-6 mt-8 flex flex-wrap justify-center items-center">
+        <app-media-type-card [type]="'Books'"/>
+        <app-media-type-card [type]="'Document'"/>
+        <app-media-type-card [type]="'Music'"/>
+        <app-media-type-card [type]="'Video'"/>
+    </div>
+    <app-search-bar class="pt-5 w-1/2" (onSearch)="onSearch($event)"/>
+    
+    <div class="gap-6 mt-8 flex flex-wrap justify-center items-center mb-5">
+        @for (media of mediaService.mediaSearchResults$(); track $index) {
+            <app-media-preview [media]="media"/>
+        }
+    </div>
+</div>

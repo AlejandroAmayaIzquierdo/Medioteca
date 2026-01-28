@@ -133,10 +133,35 @@ public class MediotecaDbContext(DbContextOptions options) : DbContext(options)
         modelBuilder
             .Entity<MediaType>()
             .HasData(
-                new MediaType { Id = 1, Name = "Video", },
-                new MediaType { Id = 2, Name = "Audio", },
-                new MediaType { Id = 3, Name = "Image", },
-                new MediaType { Id = 4, Name = "Document", }
+                new MediaType { Id = 1, Name = "Video" },
+                new MediaType { Id = 2, Name = "Audio" },
+                new MediaType { Id = 3, Name = "Image" },
+                new MediaType { Id = 4, Name = "Document" }
+            );
+
+        DateTime dateTime = new(2026, 1, 1);
+
+        modelBuilder
+            .Entity<Media>()
+            .HasData(
+                new Media
+                {
+                    Id = 1,
+                    Title = "Sample Video",
+                    Description = "This is a sample video media.",
+                    CreatedAt = dateTime,
+                    UpdatedAt = dateTime,
+                    MediaTypeId = 1,
+                },
+                new Media
+                {
+                    Id = 2,
+                    Title = "Sample Audio",
+                    Description = "This is a sample audio media.",
+                    CreatedAt = dateTime,
+                    UpdatedAt = dateTime,
+                    MediaTypeId = 2,
+                }
             );
     }
 }

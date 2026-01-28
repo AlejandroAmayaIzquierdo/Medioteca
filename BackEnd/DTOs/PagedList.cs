@@ -40,4 +40,17 @@ public class PagedList<T>
 
         return new PagedList<T>(items, currentPage, currentSize, totalCount);
     }
+
+    public static PagedList<T> Create(List<T> items, int page, int pageSize, int totalCount)
+    {
+        int currentPage = Math.Abs(page);
+        int currentSize = Math.Abs(pageSize);
+
+        if (currentSize == 0)
+            currentSize = DEFAULT_PAGE_SIZE;
+        else if (currentSize > DEFAULT_PAGE_SIZE)
+            currentSize = DEFAULT_PAGE_SIZE;
+
+        return new PagedList<T>(items, currentPage, currentSize, totalCount);
+    }
 }

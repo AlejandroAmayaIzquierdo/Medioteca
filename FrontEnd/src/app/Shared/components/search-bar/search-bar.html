@@ -1,0 +1,9 @@
+  <form (submit)="submitSearch($event)" >
+<div class="flex w-full items-center gap-2">
+  
+<input hlmInput class="w-full" placeholder="Buscar por título, género o autor" [value]="search()" (input)="search.set($event.target.value);" />
+<button hlmBtn type="submit">Buscar</button>
+   
+
+</div>
+ </form>
