@@ -18,6 +18,10 @@ public class MediotecaDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<RolePermission> RolePermissions { get; set; }
     public DbSet<Permission> Permissions { get; set; }
 
+    // Media
+    public DbSet<Media> Media { get; set; }
+    public DbSet<MediaType> MediaTypes { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -96,6 +100,8 @@ public class MediotecaDbContext(DbContextOptions options) : DbContext(options)
                 }
             );
 
+        // Create an admin user
+
         const string adminUserId = "11111111-1111-1111-1111-111111111111";
         const string AdminPasswordHash =
             "$argon2id$v=19$m=65536,t=3,p=1$YJWOX/HegOyik3549zUWxw$Xr+95M2c54e3QnfdrYtD+R2KtD+R4GBOtFeLVnX2Xno";
@@ -121,6 +127,17 @@ public class MediotecaDbContext(DbContextOptions options) : DbContext(options)
                     UserId = Guid.Parse(adminUserId),
                     RoleId = (int)RoleTypes.Admin,
                 }
+            );
+
+        // Media Types
+
+        modelBuilder
+            .Entity<MediaType>()
+            .HasData(
+                new MediaType { Id = 1, Name = "Video", },
+                new MediaType { Id = 2, Name = "Audio", },
+                new MediaType { Id = 3, Name = "Image", },
+                new MediaType { Id = 4, Name = "Document", }
             );
     }
 }
