@@ -63,7 +63,11 @@ builder
     .Services.AddAuthorizationBuilder()
     .AddPolicy("UserAccess", policy => policy.RequirePermissions(PermissionTypes.UserAccess))
     .AddPolicy("AdminAccess", policy => policy.RequirePermissions(PermissionTypes.AdminAccess))
-    .AddPolicy("MangeUsers", policy => policy.RequirePermissions(PermissionTypes.ManageUsers));
+    .AddPolicy(
+        "MangeUsers",
+        policy =>
+            policy.RequirePermissions(PermissionTypes.AdminAccess, PermissionTypes.ManageUsers)
+    );
 
 builder.Services.AddCors(options =>
 {

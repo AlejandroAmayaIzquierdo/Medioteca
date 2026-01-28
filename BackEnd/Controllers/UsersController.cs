@@ -49,4 +49,15 @@ public class UsersController(UserService userService) : ControllerBase
         var users = await _userService.GetAllUsersAsync(query);
         return Results.Ok(users);
     }
+
+    [HttpDelete("{id:guid}")]
+    [Authorize(Policy = "MangeUsers")]
+    public async Task<IResult> DeactivateUserAsync(Guid id)
+    {
+        var result = await _userService.DeactivateUserAsync(id);
+        if (!result)
+            return Results.NotFound();
+
+        return Results.NoContent();
+    }
 }

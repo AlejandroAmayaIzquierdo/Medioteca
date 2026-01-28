@@ -14,9 +14,9 @@ public class UserService(MediotecaDbContext dbContext)
     {
         return await _dbContext
             .Users.Include(u => u.UserRoles)
-                .ThenInclude(ur => ur.Role)
-                    .ThenInclude(rp => rp!.RolePermissions)
-                        .ThenInclude(p => p.Permission)
+            .ThenInclude(ur => ur.Role)
+            .ThenInclude(rp => rp!.RolePermissions)
+            .ThenInclude(p => p.Permission)
             .FirstOrDefaultAsync(u => u.Id == id);
     }
 
@@ -24,7 +24,7 @@ public class UserService(MediotecaDbContext dbContext)
     {
         var usersQuery = _dbContext
             .Users.Include(u => u.UserRoles)
-                .ThenInclude(ur => ur.Role)
+            .ThenInclude(ur => ur.Role)
             .AsQueryable();
 
         if (!string.IsNullOrEmpty(query.SearchTerm))
@@ -55,6 +55,17 @@ public class UserService(MediotecaDbContext dbContext)
 
         await _dbContext.SaveChangesAsync();
         return user;
+    }
+
+    public async Task<bool> DeactivateUserAsync(Guid userId)
+    {
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        if (user == null)
+            return false;
+
+        user.IsActive = !user.IsActive;
+        await _dbContext.SaveChangesAsync();
+        return true;
     }
 
     private static Expression<Func<User, object>> GetSortProperty(UsersQuery query)
