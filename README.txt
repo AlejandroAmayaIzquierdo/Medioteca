@@ -97,4 +97,4 @@ La base de datos SQLite se persiste en un volumen Docker montado en `./Data/Medi
 ### Variables del Backend
 
 - `ASPNETCORE_ENVIRONMENT` - Entorno (Development/Production)
-- `ConnectionStrings__SQLiteDefault` - Cadena de conexión a la base de datos SQLite
+- `ConnectionStrings__Local` - Cadena de conexión a la base de datos SQLite
