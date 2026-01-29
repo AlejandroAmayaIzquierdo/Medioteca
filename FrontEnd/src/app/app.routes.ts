@@ -41,4 +41,11 @@ export const routes: Routes = [
     },
     canActivate: [UserAuthGuard],
   },
+  {
+    path: 'media/:id',
+    loadComponent: async () => {
+      const m = await import('./pages/media-detail/media-detail');
+      return m.MediaDetail;
+    },
+  },
 ];

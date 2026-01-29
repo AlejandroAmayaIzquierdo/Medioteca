@@ -1,6 +1,7 @@
 import { Component, computed, input } from '@angular/core';
 import { Media } from '../../../../core/models/Media/Media';
 import { MediaType } from '../../../../core/models/Media/MediaTypes';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-media-preview',
@@ -8,6 +9,8 @@ import { MediaType } from '../../../../core/models/Media/MediaTypes';
   templateUrl: './media-preview.html',
 })
 export class MediaPreview {
+  constructor(private router: Router) {}
+
   readonly mediaTypes = input<MediaType[]>([]);
   readonly media = input.required<Media>();
 
@@ -26,4 +29,8 @@ export class MediaPreview {
     };
     return colors[this.media().mediaTypeId] ?? 'bg-gray-500';
   });
+
+  public navigateToDetail() {
+    this.router.navigate([`/media/${this.media().id}`]);
+  }
 }

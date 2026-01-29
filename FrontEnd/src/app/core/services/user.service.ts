@@ -50,6 +50,7 @@ export class UserService {
     return this.http
       .get<PagedList<WebApiUserDto>>(`${this.apiUrl}`, {
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        params: { page: 1, pageSize: 100 }, // TODO implement pagination
       })
       .pipe(
         tap(() => {

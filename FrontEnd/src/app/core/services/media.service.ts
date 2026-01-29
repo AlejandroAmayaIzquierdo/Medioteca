@@ -60,6 +60,20 @@ export class MediaService {
       );
   }
 
+  public fetchMediaById(mediaId: string) {
+    this.isLoading.set(true);
+    return this.http.get<Media>(`${this.apiUrl}/${mediaId}`).pipe(
+      tap((data) => {
+        this.isLoading.set(false);
+        console.log('Fetched media data by ID:', data);
+      }),
+      catchError((error) => {
+        this.isLoading.set(false);
+        return throwError(() => error);
+      }),
+    );
+  }
+
   public createMedia(mediaData: CreateMediaDto) {
     this.isLoading.set(true);
 
