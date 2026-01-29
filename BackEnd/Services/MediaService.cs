@@ -59,6 +59,9 @@ public class MediaService(MediotecaDbContext dbContext)
 
     public async Task<Result<Media>> CreateMediaAsync(CreateMediaDto newMedia)
     {
+        if (string.IsNullOrWhiteSpace(newMedia.Title))
+            return Result<Media>.Failure(MediaErrors.InvalidTitle);
+
         if (!await MediaTypeExists(newMedia.MediaTypeId))
             return Result<Media>.Failure(MediaErrors.MediaTypeNotFound);
 

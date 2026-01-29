@@ -1,0 +1,34 @@
+services:
+  Backend:
+    image: medioteca-backend
+    build:
+      context: ./BackEnd
+    container_name: medioteca-backend
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Local=Data Source=/app/data/Medioteca.db
+    volumes:
+      - ./Data:/app/data
+
+  Frontend:
+    image: medioteca-frontend
+    build:
+      context: ./FrontEnd
+    container_name: medioteca-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - Backend
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - Frontend
+      - Backend
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro # Mount the NGINX config file
