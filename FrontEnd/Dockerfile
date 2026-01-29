@@ -1,13 +1,22 @@
-FROM node:alpine
+# Etapa 1: Build
+FROM node:alpine AS build
 
 WORKDIR /usr/src/app
 
-COPY . /usr/src/app
-
+COPY package*.json ./
 RUN npm install -g @angular/cli
-
 RUN npm install
 
-EXPOSE 3000
+COPY . .
+RUN ng build --configuration=production --base-href /app/ --deploy-url /app/
 
-CMD ["ng", "serve", "--host", "0.0.0.0", "--port", "3000"]
+# Etapa 2: Servir con nginx
+FROM nginx:alpine
+
+# Copiar configuración personalizada de nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copiar los archivos compilados
+COPY --from=build /usr/src/app/dist/medioteca-client/browser /usr/share/nginx/html
+
+EXPOSE 3000

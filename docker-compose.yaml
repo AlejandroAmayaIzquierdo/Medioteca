@@ -1,5 +1,5 @@
 services:
-  Backend:
+  medioteca-backend:
     image: medioteca-backend
     build:
       context: ./BackEnd
@@ -12,7 +12,7 @@ services:
     volumes:
       - ./Data:/app/data
 
-  Frontend:
+  medioteca-frontend:
     image: medioteca-frontend
     build:
       context: ./FrontEnd
@@ -20,7 +20,7 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - Backend
+      - medioteca-backend
 
   nginx:
     image: nginx:latest
@@ -28,7 +28,7 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - Frontend
-      - Backend
+      - medioteca-frontend
+      - medioteca-backend
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro # Mount the NGINX config file

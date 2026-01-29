@@ -18,6 +18,6 @@ WORKDIR /app
 COPY --from=build /app/out ./
 
 # Expose the port your application will run on
-EXPOSE 8080
+EXPOSE 5000
 
-ENTRYPOINT [ "dotnet","Medioteca.dll" ]
+ENTRYPOINT [ "dotnet","medioteca.dll" ]
