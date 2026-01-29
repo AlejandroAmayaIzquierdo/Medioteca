@@ -29,6 +29,14 @@ docker-compose up --build -d
    - **API Backend**: http://localhost/api/
    - **Swagger**: http://localhost/api/scalar (en modo Development)
 
+3. Hacer login:
+   
+He dejado un usuario admin por defecto:
+   - **Usuario**: admin@gmail.com
+   - **Contraseña**: 12345678
+O bien, registrarse como nuevo usuario.
+
+
 ## Servicios
 
 ### API **Backend**
