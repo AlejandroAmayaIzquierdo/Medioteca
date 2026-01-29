@@ -10,3 +10,9 @@ export interface Media {
   updatedAt: Date;
   mediaTypeId: number;
 }
+
+export interface CreateMediaDto {
+  title: string;
+  description: string;
+  mediaTypeId: number;
+}

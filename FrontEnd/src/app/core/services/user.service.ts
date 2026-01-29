@@ -28,7 +28,7 @@ export class UserService {
     const token = this.authService.getToken();
 
     return this.http
-      .put<User>(`${this.apiUrl}`, data, {
+      .patch<User>(`${this.apiUrl}/me`, data, {
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       })
       .pipe(

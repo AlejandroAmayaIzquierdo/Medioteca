@@ -1,54 +1,88 @@
-<div class="w-full h-full flex flex-col items-center justify-center bg-background absolute top-0 left-0">
-    <!-- <app-back-button [returnUrl]="`/`"/> -->
-    <div class="flex flex-1 items-center justify-center px-4 pb-16">
-            <div class="w-full max-w-xl min-w-xl rounded-lg bg-card shadow-2xl p-5">
-                <div class="w-full flex flex-col justify-center items-center pb-10 pt-5">
-                    <h1 class="text-3xl font-bold">Perfil de usuario</h1>
-                    <span>Gestiona la información de tu cuenta</span>
-                </div>
-                
-
-                
-                <div class="flex flex-col justify-around gap-4">
-                    <form (submit)="onSubmit($event)">
-                    <div class="flex flex-col gap-1">
-                        <label for="user-name" class="font-semibold">Nombre de usuario</label>
-                        <input
-                            id="user-name"
-                            placeholder="usuario"
-                            class="py-2 px-1 ml-1 rounded shadow-sm focus:border transition-all"
-                            [formField]="updateUserForm.userName!"
-                        />
-                    </div>
-                    @if (updateUserForm.userName!().touched() && updateUserForm.userName!().invalid()) {
-                        <span class="text-sm text-red-500">El nombre de usuario es obligatorio.</span>
-                    }
-                    <div class="flex flex-col gap-1">
-                        <label for="user-email" class="font-semibold">Correo electrónico</label>
-                        <input
-                            id="user-email"
-                            placeholder="email"
-                            class="py-2 px-1 ml-1 rounded shadow-sm focus:border transition-all disabled:cursor-not-allowed"
-                            [value]="authService.user()?.email"
-                            disabled
-                        />
-                    </div>
-
-                    <div class="rounded bg-gray-200 p-2 flex flex-col">
-                        <label class="font-semibold mb-2 inline-block">Roles asignados: </label>
-                        <div class="flex flex-wrap gap-2">
-                            @for (rol of authService.user()?.roles; track $index) {
-                                <span class="inline-block text-primary text-sm px-2 py-1 rounded mr-2 bg-blue-200/80">
-                                    {{ rol.name }}
-                                </span>
-                            }
-                        </div>
-                    </div>
-
-                    <button
-                        [disabled]="updateUserForm().invalid()"
-                        class="w-full bg-primary text-white py-2 rounded hover:bg-primary/90 transition-all font-semibold mt-4 disabled:cursor-not-allowed disabled:opacity-50" type="submit">Guardar cambios</button>
-            </form>
-                    </div>
+<div class="min-h-screen w-full flex items-center justify-center bg-background p-4">
+  <section hlmCard class="w-full max-w-lg">
+    <!-- Header con avatar -->
+    <div hlmCardHeader class="flex flex-col items-center gap-4 pb-2">
+      <hlm-avatar class="w-20 h-20" variant="large">
+        <span hlmAvatarFallback class="text-2xl bg-primary text-white">
+          {{ authService.user()?.userName?.charAt(0)?.toUpperCase() || 'U' }}
+        </span>
+      </hlm-avatar>
+      <div class="text-center">
+        <h1 hlmCardTitle class="text-2xl">Perfil de usuario</h1>
+        <p hlmCardDescription>Gestiona la información de tu cuenta</p>
+      </div>
     </div>
+
+    <hlm-separator />
+
+    <div hlmCardContent class="pt-6">
+      <form (submit)="onSubmit($event)" class="flex flex-col gap-5">
+        <!-- Nombre de usuario -->
+        <div class="flex flex-col gap-2">
+          <label hlmLabel for="user-name" class="flex items-center gap-2">
+            <lucide-icon [name]="UserIcon" class="w-4 h-4 text-muted-foreground" />
+            Nombre de usuario
+          </label>
+          <input
+            hlmInput
+            id="user-name"
+            placeholder="Tu nombre de usuario"
+            class="w-full"
+            [formField]="updateUserForm.userName!"
+          />
+          @if (updateUserForm.userName!().touched() && updateUserForm.userName!().invalid()) {
+            <span class="text-sm text-destructive">El nombre debe tener al menos 3 caracteres.</span>
+          }
+        </div>
+
+        <!-- Email (solo lectura) -->
+        <div class="flex flex-col gap-2">
+          <label hlmLabel for="user-email" class="flex items-center gap-2">
+            <lucide-icon [name]="MailIcon" class="w-4 h-4 text-muted-foreground" />
+            Correo electrónico
+          </label>
+          <input
+            hlmInput
+            id="user-email"
+            class="w-full bg-muted cursor-not-allowed"
+            [value]="authService.user()?.email"
+            disabled
+          />
+        </div>
+
+        <hlm-separator />
+
+        <!-- Roles -->
+        <div class="flex flex-col gap-3">
+          <label hlmLabel class="flex items-center gap-2">
+            <lucide-icon [name]="ShieldIcon" class="w-4 h-4 text-muted-foreground" />
+            Roles asignados
+          </label>
+          <div class="flex flex-wrap gap-2">
+            @for (rol of authService.user()?.roles; track $index) {
+              <span hlmBadge variant="secondary">{{ rol.name }}</span>
+            } @empty {
+              <span class="text-sm text-muted-foreground">Sin roles asignados</span>
+            }
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div hlmCardFooter class="pt-4">
+      <button
+        hlmBtn
+        class="w-full"
+        [disabled]="updateUserForm().invalid() || userService.loading()"
+        (click)="onSubmit($event)"
+      >
+        <div class="flex gap-2 justify-center items-center">
+          @if (userService.loading()) {
+            <lucide-icon [name]="LoaderIcon" class="w-4 h-4 animate-spin" />
+          }
+          Guardar cambios
+        </div>
+      </button>
+    </div>
+  </section>
 </div>

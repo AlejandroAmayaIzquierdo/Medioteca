@@ -1,67 +1,89 @@
-<div class="w-full h-full flex items-center justify-center bg-background absolute top-0 left-0">
-  <!-- Formulario -->
-  <div class="flex flex-1 items-center justify-center px-4 pb-16">
-    <div class="w-full max-w-xl rounded-lg bg-card shadow-2xl p-5">
-      <div class="w-full flex flex-col justify-center items-center pb-10 pt-5">
-        <h1 class="text-3xl font-bold">Crear cuenta</h1>
-        <span>Unete a la Medioteca</span>
-      </div>
-      <form (submit)="onSubmit($event)">
-        <div class="flex flex-col justify-around gap-4">
-          <div class="flex fl.ex-col gap-1">
-            <label for="user-name" class="font-semibold">Usuario <span class="text-red-500">*</span></label>
-            <input
-              [formField]="registerForm.userName"
-              id="user-name"
-              placeholder="usuario"
-              class="py-2 px-1"
-            />
-          </div>
+<div class="min-h-screen w-full flex items-center justify-center bg-background p-4">
+  <section hlmCard class="w-full max-w-md">
+    <div hlmCardHeader class="text-center">
+      <h1 hlmCardTitle class="text-2xl">Crear cuenta</h1>
+      <p hlmCardDescription>Únete a la Medioteca</p>
+    </div>
+
+    <div hlmCardContent>
+      <form (submit)="onSubmit($event)" class="flex flex-col gap-5">
+        <!-- Usuario -->
+        <div class="flex flex-col gap-2">
+          <label hlmLabel for="user-name" class="flex items-center gap-2">
+            <lucide-icon [name]="UserIcon" class="w-4 h-4 text-muted-foreground" />
+            Nombre de usuario
+          </label>
+          <input
+            hlmInput
+            [formField]="registerForm.userName"
+            id="user-name"
+            placeholder="Tu nombre de usuario"
+            class="w-full"
+          />
           @if (registerForm.userName().touched() && registerForm.userName().invalid()) {
-            <span class="text-sm text-red-500">El nombre de usuario es obligatorio.</span>
+            <span class="text-sm text-destructive">El nombre debe tener al menos 3 caracteres.</span>
           }
-          <div class="flex flex-col gap-1">
-            <label for="user-email" class="font-semibold">Correo electronico <span class="text-red-500">*</span></label>
-            <input
-              [formField]="registerForm.email"
-              id="user-email"
-              placeholder="email"
-              class="py-2 px-1"
-            />
-          </div>
-          @if (registerForm.email().touched() && registerForm.email().invalid()) {
-            <span class="text-sm text-red-500">El correo electronico es obligatorio.</span>
-          }
-          <div class="flex flex-col gap-1">
-            <label for="user-password" class="font-semibold">Contraseña</label>
-            <input
-              [formField]="registerForm.password"
-              id="user-password"
-              type="password"
-              placeholder="password"
-              class="py-2 px-1"
-            />
-          </div>
-
-          @if (registerForm.password().touched() && registerForm.password().invalid()) {
-            <span class="text-sm text-red-500">La contraseña debe tener al menos 8 caracteres.</span>
-          }
-
-          <button
-            [disabled]="authService.loading()"
-            id="login-button"
-            type="submit"
-            class="rounded p-1 bg-primary text-white font-bold disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <div class="w-full flex gap-2 justify-center items-center">
-              Crear cuenta
-              @if (authService.loading()) {
-                <lucide-icon [name]="LoaderIcon" class="w-5 h-5 animate-spin" />
-              }
-            </div>
-          </button>
         </div>
+
+        <!-- Email -->
+        <div class="flex flex-col gap-2">
+          <label hlmLabel for="user-email" class="flex items-center gap-2">
+            <lucide-icon [name]="MailIcon" class="w-4 h-4 text-muted-foreground" />
+            Correo electrónico
+          </label>
+          <input
+            hlmInput
+            [formField]="registerForm.email"
+            id="user-email"
+            type="email"
+            placeholder="tu@email.com"
+            class="w-full"
+          />
+          @if (registerForm.email().touched() && registerForm.email().invalid()) {
+            <span class="text-sm text-destructive">Ingresa un correo válido.</span>
+          }
+        </div>
+
+        <!-- Password -->
+        <div class="flex flex-col gap-2">
+          <label hlmLabel for="user-password" class="flex items-center gap-2">
+            <lucide-icon [name]="LockIcon" class="w-4 h-4 text-muted-foreground" />
+            Contraseña
+          </label>
+          <input
+            hlmInput
+            [formField]="registerForm.password"
+            id="user-password"
+            type="password"
+            placeholder="••••••••"
+            class="w-full"
+          />
+          @if (registerForm.password().touched() && registerForm.password().invalid()) {
+            <span class="text-sm text-destructive">La contraseña debe tener al menos 8 caracteres.</span>
+          }
+        </div>
+
+        <button
+          hlmBtn
+          class="w-full"
+          [disabled]="authService.loading()"
+          type="submit"
+        >
+          <div class="flex gap-2 justify-center items-center">
+            @if (authService.loading()) {
+              <lucide-icon [name]="LoaderIcon" class="w-4 h-4 animate-spin" />
+            }
+            Crear cuenta
+          </div>
+        </button>
       </form>
     </div>
-  </div>
+
+    <div hlmCardFooter class="flex justify-center">
+      <p class="text-sm text-muted-foreground">
+        ¿Ya tienes cuenta?
+        <a routerLink="/login" class="text-primary hover:underline font-medium">Inicia sesión</a>
+      </p>
+    </div>
+  </section>
 </div>

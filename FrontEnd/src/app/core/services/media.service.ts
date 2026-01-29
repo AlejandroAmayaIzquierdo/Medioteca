@@ -3,7 +3,7 @@ import { Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { MediaType } from '../models/Media/MediaTypes';
 import { catchError, tap, throwError } from 'rxjs';
-import { Media, MediaQueryDto } from '../models/Media/Media';
+import { CreateMediaDto, Media, MediaQueryDto } from '../models/Media/Media';
 import { PagedList } from '../models/PagedList';
 
 @Injectable({
@@ -28,10 +28,10 @@ export class MediaService {
 
   public fetchMediaTypes() {
     this.isLoading.set(true);
-    return this.http.get<MediaType[]>(`${this.apiUrl}/types`).pipe(
+    return this.http.get<PagedList<MediaType>>(`${this.apiUrl}/types`).pipe(
       tap((data) => {
         this.isLoading.set(false);
-        this.mediaTypes.set(data);
+        this.mediaTypes.set(data.items);
       }),
       catchError((error) => {
         this.isLoading.set(false);
@@ -58,5 +58,19 @@ export class MediaService {
           return throwError(() => error);
         }),
       );
+  }
+
+  public createMedia(mediaData: CreateMediaDto) {
+    this.isLoading.set(true);
+
+    return this.http.post<Media>(`${this.apiUrl}`, mediaData).pipe(
+      tap(() => {
+        this.isLoading.set(false);
+      }),
+      catchError((error) => {
+        this.isLoading.set(false);
+        return throwError(() => error);
+      }),
+    );
   }
 }

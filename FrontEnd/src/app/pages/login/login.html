@@ -1,51 +1,71 @@
-<div class="w-full h-full flex items-center justify-center bg-background absolute top-0 left-0">
+<div class="min-h-screen w-full flex items-center justify-center bg-background p-4">
+  <section hlmCard class="w-full max-w-md">
+    <div hlmCardHeader class="text-center">
+      <h1 hlmCardTitle class="text-2xl">Iniciar sesión</h1>
+      <p hlmCardDescription>Accede a tu cuenta de la Medioteca</p>
+    </div>
 
-  <!-- Formulario -->
-  <div class="flex flex-1 items-center justify-center px-4 pb-16">
-    <div class="w-full max-w-xl rounded-lg bg-card shadow-2xl p-5">
-      <div class="w-full flex flex-col justify-center items-center pb-10 pt-5">
-        <h1 class="text-3xl font-bold">Iniciar sesión</h1>
-        <span>Accede a tu cuenta de la Medioteca</span>
-      </div>
-      <form (submit)="onSubmit($event)">
-        <div class="flex flex-col justify-around gap-4">
-          <div class="flex flex-col gap-1">
-            <label for="user-email" class="font-semibold">Correo electronico</label>
-            <input
-              [formField]="loginForm.email"
-              id="user-email"
-              placeholder="email"
-              class="py-2 px-1"
-            />
-          </div>
-
-          <div class="flex flex-col gap-1">
-            <label for="user-password" class="font-semibold">Contraseña</label>
-            <input
-              [formField]="loginForm.password"
-              id="user-password"
-              type="password"
-              placeholder="password"
-              class="py-2 px-1"
-            />
-          </div>
-
-          <button
-            [disabled]="authService.loading()"
-            id="login-button"
-            type="submit"
-            class="rounded p-1 bg-primary text-white font-bold disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-          <div class="w-full flex gap-2 justify-center items-center">
-            Iniciar sesión 
-            @if (authService.loading()) {
-                <lucide-icon [name]="LoaderIcon" class="w-5 h-5 animate-spin"/>
-            }
-          </div>
-
-          </button>
+    <div hlmCardContent>
+      <form (submit)="onSubmit($event)" class="flex flex-col gap-5">
+        <!-- Email -->
+        <div class="flex flex-col gap-2">
+          <label hlmLabel for="user-email" class="flex items-center gap-2">
+            <lucide-icon [name]="MailIcon" class="w-4 h-4 text-muted-foreground" />
+            Correo electrónico
+          </label>
+          <input
+            hlmInput
+            [formField]="loginForm.email"
+            id="user-email"
+            type="email"
+            placeholder="tu@email.com"
+            class="w-full"
+          />
+          @if (loginForm.email().touched() && loginForm.email().invalid()) {
+            <span class="text-sm text-destructive">Ingresa un correo válido.</span>
+          }
         </div>
+
+        <!-- Password -->
+        <div class="flex flex-col gap-2">
+          <label hlmLabel for="user-password" class="flex items-center gap-2">
+            <lucide-icon [name]="LockIcon" class="w-4 h-4 text-muted-foreground" />
+            Contraseña
+          </label>
+          <input
+            hlmInput
+            [formField]="loginForm.password"
+            id="user-password"
+            type="password"
+            placeholder="••••••••"
+            class="w-full"
+          />
+          @if (loginForm.password().touched() && loginForm.password().invalid()) {
+            <span class="text-sm text-destructive">La contraseña debe tener al menos 8 caracteres.</span>
+          }
+        </div>
+
+        <button
+          hlmBtn
+          class="w-full"
+          [disabled]="authService.loading()"
+          type="submit"
+        >
+          <div class="flex gap-2 justify-center items-center">
+            @if (authService.loading()) {
+              <lucide-icon [name]="LoaderIcon" class="w-4 h-4 animate-spin" />
+            }
+            Iniciar sesión
+          </div>
+        </button>
       </form>
     </div>
-  </div>
+
+    <div hlmCardFooter class="flex justify-center">
+      <p class="text-sm text-muted-foreground">
+        ¿No tienes cuenta?
+        <a routerLink="/register" class="text-primary underline font-medium">Regístrate</a>
+      </p>
+    </div>
+  </section>
 </div>

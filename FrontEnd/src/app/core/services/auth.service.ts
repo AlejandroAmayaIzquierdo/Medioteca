@@ -28,6 +28,7 @@ export class AuthService {
   public readonly user = this.currentUser.asReadonly();
 
   public readonly hasPermission = (permissionName: string) => {
+    console.log(this.currentUser());
     console.log('Checking permission:', permissionName);
     console.log('Current User Permissions:', this.currentUser()?.permissions);
     const user = this.currentUser();
@@ -42,6 +43,10 @@ export class AuthService {
     private router: Router,
   ) {
     const user = this.getUserFromToken();
+    this.currentUser.set(user);
+  }
+
+  public setUser(user: User) {
     this.currentUser.set(user);
   }
 

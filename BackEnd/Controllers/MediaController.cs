@@ -1,4 +1,5 @@
 using DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 
@@ -29,5 +30,21 @@ public class MediaController(MediaService mediaService) : ControllerBase
     {
         var media = await _mediaService.GetMediaByTypesAsync(id);
         return Results.Ok(media);
+    }
+
+    [HttpPost]
+    [Authorize(Policy = "UserAccess")]
+    public async Task<IResult> CreateMediaAsync([FromBody] CreateMediaDto newMedia)
+    {
+        var result = await _mediaService.CreateMediaAsync(newMedia);
+
+        if (result.IsSuccess && result.Value is not null)
+            return Results.Ok(result.Value);
+
+        return Results.Problem(
+            result.Error!.Description,
+            title: "Error while creating media",
+            statusCode: 400
+        );
     }
 }

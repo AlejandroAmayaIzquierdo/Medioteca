@@ -1,17 +1,33 @@
 import { Component, signal } from '@angular/core';
-import { Loader2, LucideAngularModule } from 'lucide-angular';
+import { Loader2, Lock, LucideAngularModule, Mail, User } from 'lucide-angular';
 import { toast } from 'ngx-sonner';
 import { RegisterFormDto } from '../../core/models/Auth/Register';
 import { debounce, email, form, FormField, min, required } from '@angular/forms/signals';
 import { AuthService } from '../../core/services/auth.service';
+import { HlmCardImports } from '@spartan-ng/helm/card';
+import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { HlmInputImports } from '@spartan-ng/helm/input';
+import { HlmLabelImports } from '@spartan-ng/helm/label';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-register',
-  imports: [FormField, LucideAngularModule],
+  imports: [
+    FormField,
+    LucideAngularModule,
+    HlmCardImports,
+    HlmButtonImports,
+    HlmInputImports,
+    HlmLabelImports,
+    RouterLink,
+  ],
   templateUrl: './register.html',
 })
 export class Register {
-  readonly LoaderIcon = Loader2;
+  protected readonly LoaderIcon = Loader2;
+  protected readonly UserIcon = User;
+  protected readonly MailIcon = Mail;
+  protected readonly LockIcon = Lock;
   protected readonly toast = toast;
 
   constructor(public authService: AuthService) {}
