@@ -31,7 +31,7 @@ docker-compose up --build -d
 
 3. Hacer login:
    
-He dejado un usuario admin por defecto:
+He dejado un usuario admin ya creado:
    - **Usuario**: admin@gmail.com
    - **Contraseña**: 12345678
 O bien, registrarse como nuevo usuario.
