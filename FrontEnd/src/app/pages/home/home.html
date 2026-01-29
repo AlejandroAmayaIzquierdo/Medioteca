@@ -26,7 +26,7 @@
       </div>
     } @else {
       @for (media of mediaService.mediaSearchResults$(); track $index) {
-        <app-media-preview [media]="media" />
+        <app-media-preview [media]="media" [mediaTypes]="mediaService.mediaTypes$()" />
       }
     }
   </div>

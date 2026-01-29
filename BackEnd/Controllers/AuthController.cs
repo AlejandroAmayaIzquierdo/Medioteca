@@ -29,8 +29,10 @@ public class AuthController(
             var error = result.Error!;
             var statusCode = error.Code switch
             {
-                "EmailTaken" or "InvalidEmail" or "InvalidPassword" =>
-                    StatusCodes.Status400BadRequest,
+                "EmailTaken"
+                or "InvalidEmail"
+                or "InvalidPassword"
+                    => StatusCodes.Status400BadRequest,
                 "RegistrationFailed" => StatusCodes.Status500InternalServerError,
                 _ => StatusCodes.Status500InternalServerError,
             };
@@ -72,6 +74,7 @@ public class AuthController(
             var statusCode = error.Code switch
             {
                 "InvalidCredentials" => StatusCodes.Status401Unauthorized,
+                "DeactivatedAccount" => StatusCodes.Status403Forbidden,
                 _ => StatusCodes.Status500InternalServerError,
             };
 

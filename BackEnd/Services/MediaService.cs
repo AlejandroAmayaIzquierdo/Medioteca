@@ -18,8 +18,11 @@ public class MediaService(MediotecaDbContext dbContext)
         if (query.SearchTerm is not null)
         {
             mediaQuery = mediaQuery.Where(m =>
-                m.Title.Contains(query.SearchTerm)
-                || (m.Description != null && m.Description.Contains(query.SearchTerm))
+                m.Title.ToLower().Contains(query.SearchTerm.ToLower())
+                || (
+                    m.Description != null
+                    && m.Description.ToLower().Contains(query.SearchTerm.ToLower())
+                )
             );
         }
 
@@ -33,6 +36,13 @@ public class MediaService(MediotecaDbContext dbContext)
             mediaQuery = mediaQuery.OrderBy(keySelector);
 
         return await PagedList<Media>.CreateAsync(mediaQuery, query.PageNumber, query.PageSize);
+    }
+
+    public async Task<Media?> GetMediaByIdAsync(int id)
+    {
+        return await _dbContext
+            .Media.Include(m => m.MediaType)
+            .FirstOrDefaultAsync(m => m.Id == id);
     }
 
     public async Task<PagedList<MediaType>> GetMediaTypes()

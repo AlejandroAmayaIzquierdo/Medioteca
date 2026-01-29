@@ -1,5 +1,6 @@
 import { Component, computed, input } from '@angular/core';
 import { Media } from '../../../../core/models/Media/Media';
+import { MediaType } from '../../../../core/models/Media/MediaTypes';
 
 @Component({
   selector: 'app-media-preview',
@@ -7,16 +8,12 @@ import { Media } from '../../../../core/models/Media/Media';
   templateUrl: './media-preview.html',
 })
 export class MediaPreview {
+  readonly mediaTypes = input<MediaType[]>([]);
   readonly media = input.required<Media>();
 
   protected readonly mediaType = computed(() => {
-    const types: Record<number, string> = {
-      1: 'Libro',
-      2: 'Película',
-      3: 'Música',
-      4: 'Videojuego',
-    };
-    return types[this.media().mediaTypeId] ?? 'Otro';
+    const type = this.mediaTypes().find((type) => type.id === this.media().mediaTypeId);
+    return type?.name ?? 'Otro';
   });
 
   protected readonly badgeColor = computed(() => {
@@ -25,6 +22,7 @@ export class MediaPreview {
       2: 'bg-red-500',
       3: 'bg-green-500',
       4: 'bg-purple-500',
+      5: 'bg-yellow-500',
     };
     return colors[this.media().mediaTypeId] ?? 'bg-gray-500';
   });

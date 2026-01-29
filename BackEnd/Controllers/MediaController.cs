@@ -18,6 +18,13 @@ public class MediaController(MediaService mediaService) : ControllerBase
         return Results.Ok(media);
     }
 
+    [HttpGet("{id:int}")]
+    public async Task<IResult> GetMediaByIdAsync(int id)
+    {
+        var media = await _mediaService.GetMediaByIdAsync(id);
+        return Results.Ok(media);
+    }
+
     [HttpGet("types")]
     public async Task<IResult> GetMediaTypesAsync()
     {

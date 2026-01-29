@@ -136,7 +136,8 @@ public class MediotecaDbContext(DbContextOptions options) : DbContext(options)
                 new MediaType { Id = 1, Name = "Video" },
                 new MediaType { Id = 2, Name = "Audio" },
                 new MediaType { Id = 3, Name = "Image" },
-                new MediaType { Id = 4, Name = "Document" }
+                new MediaType { Id = 4, Name = "Document" },
+                new MediaType { Id = 5, Name = "VideoGame" }
             );
 
         DateTime dateTime = new(2026, 1, 1);

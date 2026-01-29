@@ -9,4 +9,7 @@ public static class AuthErrors
 
     public static Error InvalidCredentials =>
         new("InvalidCredentials", "El usuario o la contraseña son incorrectos");
+
+    public static Error DeactivatedAccount =>
+        new("DeactivatedAccount", "La cuenta ha sido desactivada. Contacta al administrador.");
 }

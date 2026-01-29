@@ -63,7 +63,7 @@ export class Login {
       },
       error: (error) => {
         console.error('Login failed', error);
-        this.toast.error('Login failed: ' + (error.error?.detail || 'Unknown error'));
+        this.toast.error(error.error?.detail || 'Login failed');
       },
     });
   }
