@@ -43,7 +43,7 @@ public class MediaController(MediaService mediaService) : ControllerBase
 
         return Results.Problem(
             result.Error!.Description,
-            title: "Error while creating media",
+            title: "Error al crear la obra",
             statusCode: 400
         );
     }

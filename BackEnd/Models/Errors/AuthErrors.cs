@@ -2,12 +2,11 @@ namespace Models.Errors;
 
 public static class AuthErrors
 {
-    public static Error EmailTaken => new("EmailTaken", "The email is already taken.");
-    public static Error InvalidEmail =>
-        new("InvalidEmail", "The mail doesn't have a correct format");
+    public static Error EmailTaken => new("EmailTaken", "El email ya está en uso");
+    public static Error InvalidEmail => new("InvalidEmail", "El formato del email es inválido");
     public static Error InvalidPassword =>
-        new("InvalidPassword", "The password length should be at least 8 characters");
+        new("InvalidPassword", "La contraseña debe tener al menos 8 caracteres");
 
     public static Error InvalidCredentials =>
-        new("InvalidCredentials", "The user or the password is wrong");
+        new("InvalidCredentials", "El usuario o la contraseña son incorrectos");
 }

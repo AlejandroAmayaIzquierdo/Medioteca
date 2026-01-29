@@ -21,7 +21,7 @@ public class AuthController(
     public async Task<IResult> RegisterAsync([FromBody] UserDto req)
     {
         if (string.IsNullOrEmpty(req.UserName) || string.IsNullOrEmpty(req.Email))
-            return Results.BadRequest("The username or the mail need to be provide");
+            return Results.BadRequest("El usuario y el correo electrónico son obligatorios.");
         Result<User> result = await _authService.RegisterUserAsync(req);
 
         if (result.IsFailure)
@@ -50,7 +50,7 @@ public class AuthController(
 
         if (string.IsNullOrEmpty(userAgent) || string.IsNullOrEmpty(ipAddress))
             return Results.Problem(
-                "User-Agent or IP Address is missing",
+                "Falta la dirección IP o el User-Agent",
                 statusCode: StatusCodes.Status400BadRequest
             );
 
@@ -60,7 +60,7 @@ public class AuthController(
 
         if (device is null)
             return Results.Problem(
-                "Failed to register device",
+                "No se pudo registrar el dispositivo",
                 statusCode: StatusCodes.Status500InternalServerError
             );
 
@@ -106,7 +106,7 @@ public class AuthController(
 
         if (!isValidDevice)
             return Results.Problem(
-                "Unauthorized device",
+                "Dispositivo no autorizado",
                 statusCode: StatusCodes.Status400BadRequest
             );
 

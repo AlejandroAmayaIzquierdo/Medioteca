@@ -41,16 +41,15 @@ public class AuthService(JWTHandler jwtHandler, MediotecaDbContext dbContext)
 
             var userId = Guid.NewGuid();
 
-            User newUser =
-                new()
-                {
-                    PasswordHash = hashedPassword,
-                    Id = userId,
-                    UserName = userDto.UserName.ToLower(),
-                    Email = email,
-                    UserRoles = [new UserRole() { UserId = userId, RoleId = (int)RoleTypes.User }], // XXX Hardcoded 'User' Role
-                    CreatedAt = DateTime.UtcNow
-                };
+            User newUser = new()
+            {
+                PasswordHash = hashedPassword,
+                Id = userId,
+                UserName = userDto.UserName.ToLower(),
+                Email = email,
+                UserRoles = [new UserRole() { UserId = userId, RoleId = (int)RoleTypes.User }], // XXX Hardcoded 'User' Role
+                CreatedAt = DateTime.UtcNow,
+            };
 
             _dbContext.Users.Add(newUser);
 
@@ -68,9 +67,9 @@ public class AuthService(JWTHandler jwtHandler, MediotecaDbContext dbContext)
     {
         var user = await _dbContext
             .Users.Include(u => u.UserRoles)
-            .ThenInclude(ur => ur.Role)
-            .ThenInclude(r => r!.RolePermissions)
-            .ThenInclude(rp => rp.Permission)
+                .ThenInclude(ur => ur.Role)
+                    .ThenInclude(r => r!.RolePermissions)
+                        .ThenInclude(rp => rp.Permission)
             .FirstOrDefaultAsync(u => u.Email.ToLower() == userDto.Email.ToLower());
 
         bool isCredentialsWrong = false;

@@ -3,7 +3,7 @@ namespace Models.Errors;
 public static class MediaErrors
 {
     public static Error MediaTypeNotFound =>
-        new("MediaTypeNotFound", "The specified media type does not exist.");
+        new("MediaTypeNotFound", "El tipo de obra no fue encontrado");
 
-    public static Error TitleTaken => new("TitleTaken", "The media title is already taken.");
+    public static Error TitleTaken => new("TitleTaken", "El título de la obra ya está en uso.");
 }
